@@ -15,7 +15,7 @@ get '/commits' do
 
   # fetches specified number of pages of commits, each containing 100 commits
 	PAGES.times do |i|
-		commit_page = RestClient.get("https://api.github.com/repos/rails/rails/commits", {params: {
+		commit_page = RestClient.get("https://api.github.com/repos/callen6/lady_parts/commits", {params: {
 			client_id: ENV["CLIENT_ID"],
 			client_secret: ENV["CLIENT_SECRET"],
 			page: i,

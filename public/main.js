@@ -1,36 +1,82 @@
 $(function() {
-  RailsVis.renderGraphCanvas();
+  RailsVis.getCommits();
 })
 
 var RailsVis = {
-
+// make an ajax request to sinatra server
   getCommits: function() {
     $.ajax({
       type: 'GET',
       url: '/commits',
       dataType: "json",
       success: function(commits){
-        RailsVis.graphCommits(commits)
+
+        RailsVis.graphCommits(commits);
+
       }
     })
   },
 
   graphCommits: function(commits) {
 
+    var h=600, w = 1200,
+     inputDateDomain = RailsVis.dateDomain(commits),
+     commitsByFrequency = RailsVis.commitFrequencies(commits),
+     outputCommitDomain = [0, RailsVis.maxCommitsInDay(commitsByFrequency)],
+     barWidth = w/RailsVis.daysBetween(inputDateDomain);
 
-    // here is where we are going to generate our d3 graph!
-    
+    RailsVis.renderGraphCanvas(h , w);
+
+    var barHeight = d3.scale.linear()
+      .domain(outputCommitDomain)
+      .range([0, h]);
+    // if we want seven days we want 0 to 6, not 0 to 7, which is 8 days
+    var barIndex = d3.time.scale()
+      .domain(inputDateDomain)
+      .range([0, RailsVis.daysBetween(inputDateDomain) - 1]);
+
+    // map bar indices to x postitions
+    var barPosition = d3.scale.linear()
+      .domain([0, RailsVis.daysBetween(inputDateDomain)])
+      .range([0, w]);
+
+    var canvas = d3.select('#graph-canvas');
+
+    canvas.selectAll('rect')
+      .data(commitsByFrequency)
+      .enter()
+      .append('rect')
+      .attr('width', barWidth)
+      .attr('height', function(data, index) {
+        return barHeight(data.length)
+      })
+      .attr('x', function(data, index) {
+        var date = RailsVis.commitDate(data[0]),
+          index = barIndex(date),
+          pos = barPosition(index);
+
+        return pos;
+      })
+      .attr('y', function(data, index) {
+        return h - barHeight(data.length);  
+      })
+      .on('mouseenter', function (data) {
+       $('#bar-info').html(data.length + "Commits on " + RailsVis.commitDate(data[0]));
+
+      });
 
   },
 
-
-  renderGraphCanvas: function() {
+// helper function that creates a canvas for our graph
+// d3 is based on chaining methods
+// not important to string them on same line, can drop down a line
+  renderGraphCanvas: function(h, w) {
     var svg = d3.select('#graph-wrapper')
       .append('svg')
       .attr('id', 'graph-canvas')
-      .attr('height', 600)
-      .attr('width', 1000)
-      .style('border', '2px solid black')
+      .attr('height', h)
+      .attr('width', w)
+      .style('border', '2px solid black'); // semi-colon at end of chain of methods
   },
 
 
@@ -97,7 +143,4 @@ var RailsVis = {
     var milliseconds = minMaxArray[1] - minMaxArray[0];
     return parseInt(milliseconds* 1.15741E-8, 10) + 1;
   }
-
-
-
 }
