@@ -1,0 +1,28 @@
+@import url('http://fonts.googleapis.com/css?family=Abel|Advent+Pro:100,200,300,regular,500,600,700&subsets=latin-ext,greek,latin');
+
+body {
+  text-align: center;
+}
+
+.graph-canvas {
+  margin: auto;
+}
+
+#header-wrapper {
+  margin: auto;
+}
+
+#title {
+  font-size: 36px;
+  font-family: "Advent Pro";
+}
+
+#title span {
+  color: #992124;
+}
+
+#graph-wrapper {
+  border-top: 1px solid black;
+  border-bottom: 1px solid black;
+  padding: 10px;
+}

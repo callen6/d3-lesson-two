@@ -1,5 +1,5 @@
 $(function() {
-  RailsVis.getCommits();
+  RailsVis.renderGraphCanvas();
 })
 
 var RailsVis = {
@@ -19,12 +19,19 @@ var RailsVis = {
 
 
     // here is where we are going to generate our d3 graph!
-
+    
 
   },
 
 
-
+  renderGraphCanvas: function() {
+    var svg = d3.select('#graph-wrapper')
+      .append('svg')
+      .attr('id', 'graph-canvas')
+      .attr('height', 600)
+      .attr('width', 1000)
+      .style('border', '2px solid black')
+  },
 
 
   maxCommitsInDay: function(commitsByFrequency) {
