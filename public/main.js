@@ -19,8 +19,7 @@ var RailsVis = {
 
 
 		// here is where we are going to generate our d3 graph!
-
-
+	
 
 	},
 
