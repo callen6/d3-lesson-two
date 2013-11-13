@@ -9,10 +9,16 @@ var RailsVis = {
 			type: 'GET',
 			url: '/commits',
 			dataType: "json",
-			success: function(data){
-				console.log(data);
+			success: function(commits){
+				console.log(commits);
 			}
 		})
-	}
+	},
+
+	graphCommits: function() {
+
+	},
+
+
 
 }
